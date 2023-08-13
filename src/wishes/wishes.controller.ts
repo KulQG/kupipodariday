@@ -12,11 +12,6 @@ export class WishesController {
     return this.wishesService.create(createWishDto);
   }
 
-  @Get()
-  findAll() {
-    return this.wishesService.findAll();
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.wishesService.findOne(+id);

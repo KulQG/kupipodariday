@@ -12,11 +12,6 @@ export class OffersController {
     return this.offersService.create(createOfferDto);
   }
 
-  @Get()
-  findAll() {
-    return this.offersService.findAll();
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.offersService.findOne(+id);
