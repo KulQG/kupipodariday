@@ -30,4 +30,10 @@ export class UsersService {
   remove(id: number) {
     return this.UserRepository.delete({ id });
   }
+
+  async findByUsername(username: string) {
+    const user = await this.UserRepository.findOneBy({ username });
+
+    return user;
+  }
 }
