@@ -18,7 +18,7 @@ export class WishesService {
 
   findAll() {
     return this.WishRepository.find();
-  } 
+  }
 
   findOne(id: number) {
     return this.WishRepository.findOneBy({ id });
