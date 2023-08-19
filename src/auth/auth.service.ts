@@ -25,7 +25,7 @@ export class AuthService {
       /* Исключаем пароль из результата */
       const { password, ...result } = user;
 
-      return user;
+      return result;
     }
 
     return null;
