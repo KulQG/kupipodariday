@@ -1,4 +1,4 @@
-import { Length, IsEmail } from 'class-validator';
+import { Length, IsEmail, IsNotEmpty } from 'class-validator';
 import { Wish } from 'src/wishes/entities/wish.entity';
 import { Wishlist } from 'src/wishlists/entities/wishlist.entity';
 import {
@@ -25,29 +25,30 @@ export class User {
   @Length(2, 30)
   username: string;
 
-  @Column({ default: 'Пока ничего не рассказал о себе' })
+  @Column({ nullable: true, default: 'Пока ничего не рассказал о себе' })
   @Length(2, 200)
-  about: string;
+  about?: string;
 
-  @Column({ default: 'https://i.pravatar.cc/300' })
-  avatar: string;
+  @Column({ nullable: true, default: 'https://i.pravatar.cc/300' })
+  avatar?: string;
 
   @Column({ unique: true })
   @IsEmail()
   email: string;
 
   @Column()
+  @IsNotEmpty()
   password: string;
 
-  @Column()
+  @Column({ nullable: true })
   @OneToMany(() => Wish, (wish) => wish.id)
   wishes: number;
 
-  @Column()
+  @Column({ nullable: true })
   @OneToMany(() => Wish, (wish) => wish.offers)
   offers: number;
 
-  @Column()
+  @Column({ nullable: true })
   @OneToMany(() => Wishlist, (wishlist) => wishlist.id)
   wishlists: number;
 }
