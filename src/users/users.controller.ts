@@ -6,10 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
+  UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
+import { JwtGuard } from 'src/guards/jwt.guard';
 
 @Controller('users')
 export class UsersController {
@@ -21,8 +26,8 @@ export class UsersController {
   }
 
   @Get()
-  findMany() {
-    return this.usersService.findAll();
+  findMany(@Query('search') search: string) {
+    return this.usersService.findMany(search);
   }
 
   @Get(':id')
@@ -30,9 +35,10 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  @UseGuards(JwtGuard)
+  @Patch('me')
+  update(@Req() user: User, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(user.id, updateUserDto);
   }
 
   @Delete(':id')
