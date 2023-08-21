@@ -30,6 +30,13 @@ export class UsersController {
     return this.usersService.findMany(search);
   }
 
+  @UseGuards(JwtGuard)
+  @Get('me')
+  findMe(@Req() user: User) {
+    console.log(user.id);
+    return this.usersService.findOne(user.id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.usersService.findOne(id);
@@ -37,8 +44,9 @@ export class UsersController {
 
   @UseGuards(JwtGuard)
   @Patch('me')
-  update(@Req() user: User, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(user.id, updateUserDto);
+  update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
+    console.log(req.user);
+    return this.usersService.update(req.user.id, updateUserDto);
   }
 
   @Delete(':id')

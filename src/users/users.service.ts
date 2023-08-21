@@ -35,17 +35,17 @@ export class UsersService {
   async update(id: number, updateUserDto: UpdateUserDto) {
     const { password, ...rest } = updateUserDto;
 
+    // console.log(id);
+
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
-      await this.UserRepository.update(
-        { id },
-        { password: hashedPassword, ...rest },
-      );
+      await this.UserRepository.update(id, {
+        password: hashedPassword,
+        ...rest,
+      });
     } else {
-      await this.UserRepository.update({ id }, rest);
+      await this.UserRepository.update(id, rest);
     }
-
-    return this.UserRepository.update({ id }, updateUserDto);
   }
 
   remove(id: number) {
