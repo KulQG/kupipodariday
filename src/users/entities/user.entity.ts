@@ -1,4 +1,5 @@
 import { Length, IsEmail, IsNotEmpty } from 'class-validator';
+import { Offer } from 'src/offers/entities/offer.entity';
 import { Wish } from 'src/wishes/entities/wish.entity';
 import { Wishlist } from 'src/wishlists/entities/wishlist.entity';
 import {
@@ -40,15 +41,12 @@ export class User {
   @IsNotEmpty()
   password: string;
 
-  @Column({ nullable: true })
   @OneToMany(() => Wish, (wish) => wish.owner)
-  wishes: number;
+  wishes: Wish[];
 
-  @Column({ nullable: true })
-  @OneToMany(() => Wish, (wish) => wish.offers)
-  offers: number;
+  @OneToMany(() => Offer, (offer) => offer.user)
+  offers: Offer[];
 
-  @Column({ nullable: true })
-  @OneToMany(() => Wishlist, (wishlist) => wishlist.id)
-  wishlists: number;
+  @OneToMany(() => Wishlist, (wishlist) => wishlist)
+  wishlists: Wishlist;
 }

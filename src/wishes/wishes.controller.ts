@@ -22,7 +22,7 @@ export class WishesController {
   @Post()
   create(@Req() req, @Body() createWishDto) {
     // console.log(req.user.id);
-    createWishDto.owner = req.user.id;
+    createWishDto.owner = req.user;
     return this.wishesService.create(createWishDto);
   }
 

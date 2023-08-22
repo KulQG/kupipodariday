@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   OneToOne,
+  ManyToOne,
 } from 'typeorm';
 import { IsUrl, IsDecimal } from 'class-validator';
 import { User } from '../../users/entities/user.entity'; // Подставьте правильный путь к модели User
@@ -20,9 +21,8 @@ export class Offer {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column()
-  @OneToOne(() => User, (user) => user.id)
-  user: number;
+  @ManyToOne(() => User, (user) => user.offers)
+  user: User;
 
   @Column()
   @IsUrl()
