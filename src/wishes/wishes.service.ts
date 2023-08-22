@@ -12,8 +12,8 @@ export class WishesService {
     private WishRepository: Repository<Wish>,
   ) {}
 
-  create(createWishDto: CreateWishDto) {
-    return this.WishRepository.save(createWishDto);
+  create(wish) {
+    return this.WishRepository.save(wish);
   }
 
   findAll() {

@@ -32,6 +32,6 @@ export class Wishlist {
   @IsUrl()
   image: string;
 
-  @OneToMany(() => Wish, (wish) => wish.id)
-  items: number;
+  @OneToMany(() => Wish, (wish) => wish)
+  items: Wish;
 }

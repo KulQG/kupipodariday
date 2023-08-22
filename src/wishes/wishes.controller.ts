@@ -20,10 +20,10 @@ export class WishesController {
 
   @UseGuards(JwtGuard)
   @Post()
-  create(@Req() req, @Body() createWishDto) {
-    // console.log(req.user.id);
-    createWishDto.owner = req.user;
-    return this.wishesService.create(createWishDto);
+  create(@Req() req, @Body() createWishDto: CreateWishDto) {
+    const owner = req.user;
+    const newWish = { ...createWishDto, owner };
+    return this.wishesService.create(newWish);
   }
 
   @Get(':id')
