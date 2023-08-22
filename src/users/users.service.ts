@@ -29,7 +29,15 @@ export class UsersService {
   }
 
   async findWishes(id: number) {
-    const user = await this.UserRepository.findOneBy({ id });
+    const user = await this.UserRepository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        wishes: true,
+      },
+    });
+    console.log(user);
 
     return user.wishes;
   }

@@ -1,12 +1,4 @@
-import {
-  IsInt,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUrl,
-  Length,
-} from 'class-validator';
-import { User } from 'src/users/entities/user.entity';
+import { IsInt, IsOptional, IsString, IsUrl, Length } from 'class-validator';
 
 export class CreateWishDto {
   @IsString()
