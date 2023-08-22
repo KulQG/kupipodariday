@@ -1,4 +1,4 @@
-import { Length, IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
+import { Length, IsEmail, IsNotEmpty } from 'class-validator';
 import { Offer } from 'src/offers/entities/offer.entity';
 import { Wish } from 'src/wishes/entities/wish.entity';
 import { Wishlist } from 'src/wishlists/entities/wishlist.entity';
@@ -6,7 +6,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,

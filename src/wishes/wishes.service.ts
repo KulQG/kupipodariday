@@ -1,5 +1,4 @@
-import { Injectable, Req } from '@nestjs/common';
-import { CreateWishDto } from './dto/create-wish.dto';
+import { Injectable } from '@nestjs/common';
 import { UpdateWishDto } from './dto/update-wish.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Wish } from './entities/wish.entity';
