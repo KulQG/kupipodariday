@@ -37,7 +37,7 @@ export class Wish {
   @IsDecimal({ decimal_digits: '2' })
   price: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   @IsDecimal({ decimal_digits: '2' })
   raised: number;
 
@@ -48,7 +48,7 @@ export class Wish {
   @Length(1, 1024)
   description: string;
 
-  @ManyToMany(() => User, (user) => user.id)
+  @ManyToMany(() => User, (user) => user.wishes)
   offers: number;
 
   @Column({ type: 'float', default: 0 })

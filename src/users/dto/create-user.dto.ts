@@ -25,6 +25,6 @@ export class CreateUserDto {
 
   @IsString()
   @IsOptional()
-  @Length(2, 200)
+  @Length(200)
   about?: string;
 }

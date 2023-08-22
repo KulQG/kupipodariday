@@ -41,7 +41,7 @@ export class User {
   password: string;
 
   @Column({ nullable: true })
-  @OneToMany(() => Wish, (wish) => wish.id)
+  @OneToMany(() => Wish, (wish) => wish.owner)
   wishes: number;
 
   @Column({ nullable: true })

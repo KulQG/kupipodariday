@@ -16,7 +16,7 @@ export class UsersService {
     return this.UserRepository.save(createUserDto);
   }
 
-  async findMany(search: string): Promise<User[]> {
+  findMany(search: string): Promise<User[]> {
     const queryBuilder = this.UserRepository.createQueryBuilder('user');
 
     if (search) {
@@ -28,14 +28,18 @@ export class UsersService {
     return queryBuilder.getMany();
   }
 
+  async findWishes(id: number) {
+    const user = await this.UserRepository.findOneBy({ id });
+
+    return user.wishes;
+  }
+
   findOne(id: number): Promise<User> {
     return this.UserRepository.findOneBy({ id });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     const { password, ...rest } = updateUserDto;
-
-    // console.log(id);
 
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);

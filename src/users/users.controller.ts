@@ -15,6 +15,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { JwtGuard } from 'src/guards/jwt.guard';
+import { JoinTable } from 'typeorm';
 
 @Controller('users')
 export class UsersController {
@@ -32,9 +33,14 @@ export class UsersController {
 
   @UseGuards(JwtGuard)
   @Get('me')
-  findMe(@Req() user: User) {
-    console.log(user.id);
-    return this.usersService.findOne(user.id);
+  findMe(@Req() req) {
+    return this.usersService.findOne(req.user.id);
+  }
+
+  @UseGuards(JwtGuard)
+  @Get('me/wishes')
+  findWishes(@Req() req) {
+    return this.usersService.findWishes(req.user.id);
   }
 
   @Get(':id')
