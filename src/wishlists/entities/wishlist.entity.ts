@@ -6,8 +6,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToOne,
 } from 'typeorm';
 import { Wish } from 'src/wishes/entities/wish.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Entity()
 export class Wishlist {
@@ -31,6 +33,9 @@ export class Wishlist {
   @Column()
   @IsUrl()
   image: string;
+
+  @ManyToOne(() => User, (user) => user.wishlists)
+  owner: User;
 
   @OneToMany(() => Wish, (wish) => wish)
   items: Wish[];

@@ -36,8 +36,9 @@ export class UsersController {
 
   @UseGuards(JwtGuard)
   @Get('me/wishes')
-  findWishes(@Req() req) {
-    return this.usersService.findWishes(req.user.id);
+  async findWishes(@Req() req) {
+    const user = await this.usersService.findOne(req.user.id);
+    return this.usersService.findWishes(user.username);
   }
 
   @Get(':username/wishes')

@@ -51,6 +51,6 @@ export class User {
   offers: Offer[];
 
   // @JoinColumn()
-  @OneToMany(() => Wishlist, (wishlist) => wishlist)
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.owner)
   wishlists: Wishlist[];
 }

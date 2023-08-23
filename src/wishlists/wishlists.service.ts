@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { UpdateWishlistDto } from './dto/update-wishlist.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Wishlist } from './entities/wishlist.entity';
@@ -7,21 +6,32 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class WishlistsService {
-constructor (
-  @InjectRepository(Wishlist)
-  private WishlistRepository: Repository<Wishlist>
-) {}
+  constructor(
+    @InjectRepository(Wishlist)
+    private WishlistRepository: Repository<Wishlist>,
+  ) {}
 
-  create(createWishlistDto: CreateWishlistDto) {
-    return this.WishlistRepository.save(createWishlistDto);;
+  create(createWishlist) {
+    return this.WishlistRepository.save(createWishlist);
   }
 
   findAll() {
-    return this.WishlistRepository.find();
+    return this.WishlistRepository.find({
+      relations: {
+        owner: true,
+        items: true,
+      },
+    });
   }
 
   findOne(id: number) {
-    return this.WishlistRepository.findOneBy({ id });
+    return this.WishlistRepository.findOne({
+      where: { id },
+      relations: {
+        owner: true,
+        items: true,
+      },
+    });
   }
 
   update(id: number, updateWishlistDto: UpdateWishlistDto) {

@@ -42,6 +42,12 @@ export class WishesService {
     });
   }
 
+  findMany(wishesId: number[]) {
+    return wishesId.map((id) => {
+      return this.findOne(id);
+    });
+  }
+
   update(id: number, updateWishDto: UpdateWishDto) {
     return this.WishRepository.update({ id }, updateWishDto);
   }
