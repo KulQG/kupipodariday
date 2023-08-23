@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { Offer } from './entities/offer.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Wish } from 'src/wishes/entities/wish.entity';
+import { WishesService } from 'src/wishes/wishes.service';
 
 @Injectable()
 export class OffersService {
@@ -12,12 +13,18 @@ export class OffersService {
     private OfferRepository: Repository<Offer>,
   ) {}
 
-  create(createOfferDto: CreateOfferDto) {
-    return this.OfferRepository.save(createOfferDto);
+  create(offer) {
+    return this.OfferRepository.save(offer);
   }
 
   findOne(id: number) {
-    return this.OfferRepository.findOneBy({ id });
+    return this.OfferRepository.findOne({
+      where: { id },
+      relations: {
+        user: true,
+        item: true,
+      },
+    });
   }
 
   update(id: number, updateOfferDto: UpdateOfferDto) {

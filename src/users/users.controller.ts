@@ -24,9 +24,10 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @Get()
-  findMany(@Query('search') search: string) {
-    return this.usersService.findMany(search);
+  @Post('find')
+  findMany(@Body() query: { query: string }) {
+    // console.log(query);
+    return this.usersService.findMany(query);
   }
 
   @UseGuards(JwtGuard)
@@ -41,10 +42,20 @@ export class UsersController {
     return this.usersService.findWishes(req.user.id);
   }
 
+  @Get(':id/wishes')
+  findAnotherUserWishes(@Param('id') id: number) {
+    return this.usersService.findWishes(id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.usersService.findOne(id);
   }
+
+  // @Get(':username')
+  // findAnotherUser(@Param('username') username: string) {
+  //   return this.usersService.findOne(username);
+  // }
 
   @UseGuards(JwtGuard)
   @Patch('me')

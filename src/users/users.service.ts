@@ -16,16 +16,20 @@ export class UsersService {
     return this.UserRepository.save(createUserDto);
   }
 
-  findMany(search: string): Promise<User[]> {
-    const queryBuilder = this.UserRepository.createQueryBuilder('user');
+  async findMany(search: { query: string }) {
+    let users: User[];
 
-    if (search) {
-      queryBuilder
-        .where('user.username LIKE :search', { search: `%${search}%` })
-        .orWhere('user.email LIKE :search', { search: `%${search}%` });
+    users = await this.UserRepository.find({
+      where: { email: search.query },
+    });
+
+    if (users.length < 1) {
+      users = await this.UserRepository.find({
+        where: { username: search.query },
+      });
     }
 
-    return queryBuilder.getMany();
+    return users;
   }
 
   async findWishes(id: number) {
@@ -37,13 +41,19 @@ export class UsersService {
         wishes: true,
       },
     });
-    console.log(user);
 
     return user.wishes;
   }
 
-  findOne(id: number): Promise<User> {
-    return this.UserRepository.findOneBy({ id });
+  findOne(id): Promise<User> {
+    return this.UserRepository.findOne({
+      where: { id },
+      relations: {
+        wishes: true,
+        offers: true,
+        // wishlists: true,
+      },
+    });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

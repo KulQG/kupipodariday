@@ -19,8 +19,27 @@ export class WishesService {
     return this.WishRepository.find();
   }
 
-  findOne(id: number) {
-    return this.WishRepository.findOneBy({ id });
+  async findOne(id: number) {
+    const wish = await this.WishRepository.findOne({
+      where: { id },
+      relations: {
+        offers: true,
+      },
+    });
+
+    const amounts = wish.offers.map((offer) => offer.amount);
+
+    const generalAmount = amounts.reduce((acc, cur) => acc + cur, 0);
+
+    await this.WishRepository.update({ id }, { raised: generalAmount });
+
+    return this.WishRepository.findOne({
+      where: { id },
+      relations: {
+        owner: true,
+        offers: true,
+      },
+    });
   }
 
   update(id: number, updateWishDto: UpdateWishDto) {

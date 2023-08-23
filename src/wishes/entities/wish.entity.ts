@@ -8,8 +8,10 @@ import {
   ManyToOne,
   ManyToMany,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity'; // Подставьте правильный путь к модели User
+import { Offer } from 'src/offers/entities/offer.entity';
 
 @Entity()
 export class Wish {
@@ -42,7 +44,6 @@ export class Wish {
   @IsDecimal({ decimal_digits: '2' })
   raised: number;
 
-  @JoinColumn()
   @ManyToOne(() => User, (user) => user.wishes)
   owner: User;
 
@@ -50,8 +51,8 @@ export class Wish {
   @Length(1, 1024)
   description: string;
 
-  @ManyToMany(() => User, (user) => user.wishes)
-  offers: number;
+  @OneToMany(() => Offer, (offer) => offer.item)
+  offers: Offer[];
 
   @Column({ type: 'float', default: 0 })
   @IsInt()

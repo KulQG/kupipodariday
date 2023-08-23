@@ -33,5 +33,5 @@ export class Wishlist {
   image: string;
 
   @OneToMany(() => Wish, (wish) => wish)
-  items: Wish;
+  items: Wish[];
 }

@@ -6,6 +6,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -41,12 +42,15 @@ export class User {
   @IsNotEmpty()
   password: string;
 
+  // @JoinColumn()
   @OneToMany(() => Wish, (wish) => wish.owner)
   wishes: Wish[];
 
+  // @JoinColumn()
   @OneToMany(() => Offer, (offer) => offer.user)
   offers: Offer[];
 
+  // @JoinColumn()
   @OneToMany(() => Wishlist, (wishlist) => wishlist)
-  wishlists: Wishlist;
+  wishlists: Wishlist[];
 }

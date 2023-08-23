@@ -4,11 +4,13 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  OneToOne,
   ManyToOne,
+  OneToOne,
+  OneToMany,
 } from 'typeorm';
-import { IsUrl, IsDecimal } from 'class-validator';
+import { IsDecimal } from 'class-validator';
 import { User } from '../../users/entities/user.entity'; // Подставьте правильный путь к модели User
+import { Wish } from 'src/wishes/entities/wish.entity';
 
 @Entity()
 export class Offer {
@@ -24,9 +26,8 @@ export class Offer {
   @ManyToOne(() => User, (user) => user.offers)
   user: User;
 
-  @Column()
-  @IsUrl()
-  item: string;
+  @ManyToOne(() => Wish, (wish) => wish.offers)
+  item: Wish;
 
   @Column()
   @IsDecimal()
