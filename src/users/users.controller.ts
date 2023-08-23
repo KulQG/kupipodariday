@@ -8,7 +8,6 @@ import {
   Delete,
   Req,
   UseGuards,
-  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -26,7 +25,6 @@ export class UsersController {
 
   @Post('find')
   findMany(@Body() query: { query: string }) {
-    // console.log(query);
     return this.usersService.findMany(query);
   }
 
@@ -42,25 +40,19 @@ export class UsersController {
     return this.usersService.findWishes(req.user.id);
   }
 
-  @Get(':id/wishes')
-  findAnotherUserWishes(@Param('id') id: number) {
-    return this.usersService.findWishes(id);
+  @Get(':username/wishes')
+  findAnotherUserWishes(@Param('username') username: string) {
+    return this.usersService.findWishes(username);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.usersService.findOne(id);
+  @Get(':username')
+  findOne(@Param('username') username: string) {
+    return this.usersService.findByUsername(username);
   }
-
-  // @Get(':username')
-  // findAnotherUser(@Param('username') username: string) {
-  //   return this.usersService.findOne(username);
-  // }
 
   @UseGuards(JwtGuard)
   @Patch('me')
   update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
-    console.log(req.user);
     return this.usersService.update(req.user.id, updateUserDto);
   }
 

@@ -26,19 +26,37 @@ export class OffersController {
   @Post()
   async create(@Req() req, @Body() createOfferDto: CreateOfferDto) {
     const user = req.user.id;
+    const wish = await this.wishesService.findOne(createOfferDto.itemId);
 
-    const wishId = createOfferDto.itemId;
-    // await this.wishesService.update(wishId)
-    const wish = await this.wishesService.findOne(wishId);
+    if (
+      wish.raised < wish.price &&
+      createOfferDto.amount <= wish.price - wish.raised &&
+      wish.owner.id !== user
+    ) {
+      let createOffer;
 
-    const createOffer = {
-      user,
-      item: wish,
-      amount: createOfferDto.amount,
-      hidden: createOfferDto.hidden,
-    };
+      if (createOfferDto.hidden) {
+        createOffer = {
+          item: wish,
+          amount: createOfferDto.amount,
+          hidden: createOfferDto.hidden,
+        };
+      } else {
+        createOffer = {
+          user,
+          item: wish,
+          amount: createOfferDto.amount,
+          hidden: createOfferDto.hidden,
+        };
+      }
 
-    return this.offersService.create(createOffer);
+      return this.offersService.create(createOffer);
+    }
+  }
+
+  @Get()
+  findAll() {
+    return this.offersService.findAll();
   }
 
   @Get(':id')

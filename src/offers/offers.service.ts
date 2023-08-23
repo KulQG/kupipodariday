@@ -3,8 +3,6 @@ import { UpdateOfferDto } from './dto/update-offer.dto';
 import { Offer } from './entities/offer.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Wish } from 'src/wishes/entities/wish.entity';
-import { WishesService } from 'src/wishes/wishes.service';
 
 @Injectable()
 export class OffersService {
@@ -20,6 +18,15 @@ export class OffersService {
   findOne(id: number) {
     return this.OfferRepository.findOne({
       where: { id },
+      relations: {
+        user: true,
+        item: true,
+      },
+    });
+  }
+
+  findAll() {
+    return this.OfferRepository.find({
       relations: {
         user: true,
         item: true,

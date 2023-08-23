@@ -32,10 +32,10 @@ export class UsersService {
     return users;
   }
 
-  async findWishes(id: number) {
+  async findWishes(username: string) {
     const user = await this.UserRepository.findOne({
       where: {
-        id,
+        username,
       },
       relations: {
         wishes: true,
@@ -45,9 +45,13 @@ export class UsersService {
     return user.wishes;
   }
 
-  findOne(id): Promise<User> {
+  findOne(id: number): Promise<User> {
+    return this.UserRepository.findOneBy({ id });
+  }
+
+  findByUsername(username: string): Promise<User> {
     return this.UserRepository.findOne({
-      where: { id },
+      where: { username },
       relations: {
         wishes: true,
         offers: true,
@@ -72,11 +76,5 @@ export class UsersService {
 
   remove(id: number) {
     return this.UserRepository.delete({ id });
-  }
-
-  async findByUsername(username: string) {
-    const user = await this.UserRepository.findOneBy({ username });
-
-    return user;
   }
 }
