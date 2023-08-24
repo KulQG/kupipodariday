@@ -6,8 +6,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   ManyToOne,
-  ManyToMany,
-  JoinColumn,
   OneToMany,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity'; // Подставьте правильный путь к модели User

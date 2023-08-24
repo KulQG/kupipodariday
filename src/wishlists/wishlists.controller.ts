@@ -23,6 +23,7 @@ export class WishlistsController {
     private readonly wishesService: WishesService,
   ) {}
 
+  @UseGuards(JwtGuard)
   @Post()
   async create(@Req() req, @Body() createWishlistDto: CreateWishlistDto) {
     const owner = req.user.id;
@@ -34,11 +35,13 @@ export class WishlistsController {
     return this.wishlistsService.create(newWishlist);
   }
 
+  @UseGuards(JwtGuard)
   @Get()
   findAll() {
     return this.wishlistsService.findAll();
   }
 
+  @UseGuards(JwtGuard)
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.wishlistsService.findOne(+id);
@@ -59,8 +62,14 @@ export class WishlistsController {
     }
   }
 
+  @UseGuards(JwtGuard)
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.wishlistsService.remove(+id);
+  async remove(@Req() req, @Param('id') id: number) {
+    const curWishlist = await this.wishlistsService.findOne(id);
+    if (req.user.id === curWishlist.owner) {
+      return this.wishlistsService.remove(+id);
+    } else {
+      throw new ForbiddenException();
+    }
   }
 }

@@ -8,6 +8,7 @@ import {
   Delete,
   Req,
   UseGuards,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -41,11 +42,13 @@ export class UsersController {
     return this.usersService.findWishes(user.username);
   }
 
+  @UseGuards(JwtGuard)
   @Get(':username/wishes')
   findAnotherUserWishes(@Param('username') username: string) {
     return this.usersService.findWishes(username);
   }
 
+  @UseGuards(JwtGuard)
   @Get(':username')
   findOne(@Param('username') username: string) {
     return this.usersService.findByUsername(username);
@@ -57,8 +60,13 @@ export class UsersController {
     return this.usersService.update(req.user.id, updateUserDto);
   }
 
+  @UseGuards(JwtGuard)
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.usersService.remove(id);
+  remove(@Req() req, @Param('id') id: number) {
+    if (req.user.id === id) {
+      return this.usersService.remove(id);
+    } else {
+      throw new ForbiddenException();
+    }
   }
 }

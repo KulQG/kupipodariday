@@ -48,6 +48,20 @@ export class WishesService {
     });
   }
 
+  findLast() {
+    return this.WishRepository.find({
+      order: { id: 'DESC' },
+      take: 40,
+    });
+  }
+
+  findTop() {
+    return this.WishRepository.find({
+      order: { copied: 'DESC' },
+      take: 10,
+    });
+  }
+
   update(id: number, updateWishDto: UpdateWishDto) {
     return this.WishRepository.update({ id }, updateWishDto);
   }

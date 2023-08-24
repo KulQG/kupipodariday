@@ -16,7 +16,6 @@ import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { JwtGuard } from 'src/guards/jwt.guard';
 import { WishesService } from 'src/wishes/wishes.service';
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 
 @Controller('offers')
 export class OffersController {
@@ -59,21 +58,25 @@ export class OffersController {
     }
   }
 
+  @UseGuards(JwtGuard)
   @Get()
   findAll() {
     return this.offersService.findAll();
   }
 
+  @UseGuards(JwtGuard)
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.offersService.findOne(+id);
   }
 
+  @UseGuards(JwtGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateOfferDto: UpdateOfferDto) {
     return this.offersService.update(+id, updateOfferDto);
   }
 
+  @UseGuards(JwtGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.offersService.remove(+id);

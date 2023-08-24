@@ -12,6 +12,7 @@ export class UsersService {
     @InjectRepository(User)
     private UserRepository: Repository<User>,
   ) {}
+
   create(createUserDto: CreateUserDto) {
     return this.UserRepository.save(createUserDto);
   }
