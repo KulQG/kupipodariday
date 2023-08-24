@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,7 +13,7 @@ export class UsersService {
     private UserRepository: Repository<User>,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     return this.UserRepository.save(createUserDto);
   }
 
@@ -56,7 +56,7 @@ export class UsersService {
       relations: {
         wishes: true,
         offers: true,
-        // wishlists: true,
+        wishlists: true,
       },
     });
   }
@@ -75,7 +75,11 @@ export class UsersService {
     }
   }
 
-  remove(id: number) {
-    return this.UserRepository.delete({ id });
+  remove(id: number, userId) {
+    if (userId === id) {
+      return this.UserRepository.delete({ id });
+    } else {
+      throw new ForbiddenException();
+    }
   }
 }

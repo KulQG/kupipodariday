@@ -13,29 +13,16 @@ import {
 import { WishlistsService } from './wishlists.service';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { UpdateWishlistDto } from './dto/update-wishlist.dto';
-import { WishesService } from 'src/wishes/wishes.service';
 import { JwtGuard } from 'src/guards/jwt.guard';
-import { UsersService } from 'src/users/users.service';
 
 @Controller('wishlists')
 export class WishlistsController {
-  constructor(
-    private readonly wishlistsService: WishlistsService,
-    private readonly wishesService: WishesService,
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly wishlistsService: WishlistsService) {}
 
   @UseGuards(JwtGuard)
   @Post()
   async create(@Req() req, @Body() createWishlistDto: CreateWishlistDto) {
-    console.log(createWishlistDto);
-    const owner = await this.usersService.findOne(req.user.id);
-    const { name, image, itemsId } = createWishlistDto;
-    const items = await this.wishesService.findMany(itemsId);
-
-    const newWishlist = { name, image, items, owner };
-
-    return this.wishlistsService.create(newWishlist);
+    return await this.wishlistsService.create(createWishlistDto, req.user);
   }
 
   @UseGuards(JwtGuard)
@@ -47,7 +34,7 @@ export class WishlistsController {
   @UseGuards(JwtGuard)
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.wishlistsService.findOne(+id);
+    return this.wishlistsService.findOne(id);
   }
 
   @UseGuards(JwtGuard)
@@ -69,7 +56,7 @@ export class WishlistsController {
   @Delete(':id')
   async remove(@Req() req, @Param('id') id: number) {
     const curWishlist = await this.wishlistsService.findOne(id);
-    if (req.user.id === curWishlist.owner) {
+    if (req.user.id === curWishlist.owner.id) {
       return this.wishlistsService.remove(+id);
     } else {
       throw new ForbiddenException();

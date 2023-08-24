@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity'; // Подставьте правильный путь к модели User
 import { Offer } from 'src/offers/entities/offer.entity';
@@ -42,6 +43,7 @@ export class Wish {
   @IsDecimal({ decimal_digits: '2' })
   raised: number;
 
+  @JoinColumn()
   @ManyToOne(() => User, (user) => user.wishes)
   owner: User;
 

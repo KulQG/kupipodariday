@@ -8,6 +8,8 @@ import {
   OneToMany,
   ManyToOne,
   JoinColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { Wish } from 'src/wishes/entities/wish.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -35,10 +37,10 @@ export class Wishlist {
   @IsUrl()
   image: string;
 
-  @JoinColumn()
   @ManyToOne(() => User, (user) => user.wishlists)
   owner: User;
 
-  @OneToMany(() => Wish, (wish) => wish)
+  @JoinTable()
+  @ManyToMany(() => Wish, (wish) => wish)
   items: Wish[];
 }

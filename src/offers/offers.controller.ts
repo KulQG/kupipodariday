@@ -8,54 +8,20 @@ import {
   Delete,
   UseGuards,
   Req,
-  BadRequestException,
-  ForbiddenException,
 } from '@nestjs/common';
 import { OffersService } from './offers.service';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { JwtGuard } from 'src/guards/jwt.guard';
-import { WishesService } from 'src/wishes/wishes.service';
 
 @Controller('offers')
 export class OffersController {
-  constructor(
-    private readonly offersService: OffersService,
-    private readonly wishesService: WishesService,
-  ) {}
+  constructor(private readonly offersService: OffersService) {}
 
   @UseGuards(JwtGuard)
   @Post()
-  async create(@Req() req, @Body() createOfferDto: CreateOfferDto) {
-    const user = req.user.id;
-    const wish = await this.wishesService.findOne(createOfferDto.itemId);
-
-    if (wish.owner.id !== user && wish.raised < wish.price) {
-      if (createOfferDto.amount <= wish.price - wish.raised) {
-        let createOffer;
-
-        if (createOfferDto.hidden) {
-          createOffer = {
-            item: wish,
-            amount: createOfferDto.amount,
-            hidden: createOfferDto.hidden,
-          };
-        } else {
-          createOffer = {
-            user,
-            item: wish,
-            amount: createOfferDto.amount,
-            hidden: createOfferDto.hidden,
-          };
-        }
-
-        return this.offersService.create(createOffer);
-      } else {
-        throw new BadRequestException();
-      }
-    } else {
-      throw new ForbiddenException();
-    }
+  create(@Req() req, @Body() createOfferDto: CreateOfferDto) {
+    return this.offersService.create(createOfferDto, req.user.id);
   }
 
   @UseGuards(JwtGuard)

@@ -8,7 +8,6 @@ import {
   Delete,
   Req,
   UseGuards,
-  ForbiddenException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -37,9 +36,8 @@ export class UsersController {
 
   @UseGuards(JwtGuard)
   @Get('me/wishes')
-  async findWishes(@Req() req) {
-    const user = await this.usersService.findOne(req.user.id);
-    return this.usersService.findWishes(user.username);
+  findWishes(@Req() req) {
+    return this.usersService.findWishes(req.user.username);
   }
 
   @UseGuards(JwtGuard)
@@ -63,10 +61,6 @@ export class UsersController {
   @UseGuards(JwtGuard)
   @Delete(':id')
   remove(@Req() req, @Param('id') id: number) {
-    if (req.user.id === id) {
-      return this.usersService.remove(id);
-    } else {
-      throw new ForbiddenException();
-    }
+    return this.usersService.remove(id, req.user.id);
   }
 }

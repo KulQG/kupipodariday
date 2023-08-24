@@ -3,6 +3,7 @@ import { UpdateWishDto } from './dto/update-wish.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Wish } from './entities/wish.entity';
 import { Repository } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class WishesService {
@@ -11,8 +12,22 @@ export class WishesService {
     private WishRepository: Repository<Wish>,
   ) {}
 
-  create(wish) {
-    return this.WishRepository.save(wish);
+  create(wish, owner: User) {
+    const newWish = { ...wish, owner };
+
+    return this.WishRepository.save(newWish);
+  }
+
+  async copy(user: User, id: number) {
+    const curWish = await this.findOne(id);
+
+    await this.update(curWish.id, {
+      copied: (curWish.copied += 1),
+    });
+
+    const { owner, offers, ...wish } = curWish;
+
+    return this.create({ ...wish, owner: user, offers: [] }, user);
   }
 
   findAll() {
@@ -52,9 +67,10 @@ export class WishesService {
     }
   }
 
-  findMany(wishesId: number[]) {
-    return wishesId.map((id) => {
-      return this.findOne(id);
+  async findMany(wishesId: number[]) {
+    return wishesId.map(async (id) => {
+      const wish = await this.findOne(id);
+      return wish;
     });
   }
 
