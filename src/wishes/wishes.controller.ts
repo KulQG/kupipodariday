@@ -8,6 +8,7 @@ import {
   Delete,
   Req,
   UseGuards,
+  Headers,
   ForbiddenException,
 } from '@nestjs/common';
 import { WishesService } from './wishes.service';
@@ -31,13 +32,11 @@ export class WishesController {
     return this.wishesService.create(newWish);
   }
 
-  @UseGuards(JwtGuard)
   @Get('last')
   findLast() {
     return this.wishesService.findLast();
   }
 
-  @UseGuards(JwtGuard)
   @Get('top')
   findTop() {
     return this.wishesService.findTop();
@@ -50,16 +49,19 @@ export class WishesController {
     await this.wishesService.update(curWish.id, {
       copied: (curWish.copied += 1),
     });
-    const { owner, ...wish } = curWish;
+    const { owner, offers, ...wish } = curWish;
     const user = await this.usersService.findOne(req.user.id);
 
-    return this.wishesService.create({ ...wish, owner: user });
+    return this.wishesService.create({ ...wish, owner: user, offers: [] });
   }
 
-  @UseGuards(JwtGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.wishesService.findOne(+id);
+  findOne(@Headers() headers, @Param('id') id: string) {
+    if (headers['authorization']) {
+      return this.wishesService.findOne(+id, true);
+    } else {
+      return this.wishesService.findOne(+id, false);
+    }
   }
 
   @UseGuards(JwtGuard)
@@ -70,7 +72,7 @@ export class WishesController {
     @Body() updateWishDto: UpdateWishDto,
   ) {
     const curWish = await this.wishesService.findOne(id);
-    if (req.user.id === curWish.owner.id) {
+    if (req.user.id === curWish.owner.id && curWish.offers.length === 0) {
       return this.wishesService.update(+id, updateWishDto);
     } else {
       throw new ForbiddenException();

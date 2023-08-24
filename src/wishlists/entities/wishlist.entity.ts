@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
   OneToMany,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Wish } from 'src/wishes/entities/wish.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -26,14 +27,15 @@ export class Wishlist {
   @Length(1, 250)
   name: string;
 
-  @Column()
-  @Length(1500)
-  description: string;
+  // @Column()
+  // @Length(1500)
+  // description: string;
 
   @Column()
   @IsUrl()
   image: string;
 
+  @JoinColumn()
   @ManyToOne(() => User, (user) => user.wishlists)
   owner: User;
 

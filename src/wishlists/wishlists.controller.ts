@@ -15,18 +15,21 @@ import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { UpdateWishlistDto } from './dto/update-wishlist.dto';
 import { WishesService } from 'src/wishes/wishes.service';
 import { JwtGuard } from 'src/guards/jwt.guard';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('wishlists')
 export class WishlistsController {
   constructor(
     private readonly wishlistsService: WishlistsService,
     private readonly wishesService: WishesService,
+    private readonly usersService: UsersService,
   ) {}
 
   @UseGuards(JwtGuard)
   @Post()
   async create(@Req() req, @Body() createWishlistDto: CreateWishlistDto) {
-    const owner = req.user.id;
+    console.log(createWishlistDto);
+    const owner = await this.usersService.findOne(req.user.id);
     const { name, image, itemsId } = createWishlistDto;
     const items = await this.wishesService.findMany(itemsId);
 

@@ -19,7 +19,7 @@ export class WishesService {
     return this.WishRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, hasAuth = true) {
     const wish = await this.WishRepository.findOne({
       where: { id },
       relations: {
@@ -33,13 +33,23 @@ export class WishesService {
 
     await this.WishRepository.update({ id }, { raised: generalAmount });
 
-    return this.WishRepository.findOne({
-      where: { id },
-      relations: {
-        owner: true,
-        offers: true,
-      },
-    });
+    if (hasAuth) {
+      return this.WishRepository.findOne({
+        where: { id },
+        relations: {
+          owner: true,
+          offers: true,
+        },
+      });
+    } else {
+      return this.WishRepository.findOne({
+        where: { id },
+        relations: {
+          owner: true,
+          offers: false,
+        },
+      });
+    }
   }
 
   findMany(wishesId: number[]) {
@@ -58,7 +68,7 @@ export class WishesService {
   findTop() {
     return this.WishRepository.find({
       order: { copied: 'DESC' },
-      take: 10,
+      take: 20,
     });
   }
 
